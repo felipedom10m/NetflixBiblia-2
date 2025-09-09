@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetflixBiblia-2 - Netflix App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #141414; color: #ffffff; overflow-x: hidden; }
+        
+        .netflix-header { 
+            background: rgba(0,0,0,0.9); 
+            padding: 20px 60px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        .netflix-logo { font-size: 24px; font-weight: 700; color: #e50914; }
+        .user-menu { display: flex; align-items: center; gap: 20px; }
+        .logout-btn { background: #e50914; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        
+        .netflix-content { margin-top: 80px; padding: 40px 60px; }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23333" width="1200" height="600"/><text x="600" y="300" font-family="Arial" font-size="48" fill="%23666" text-anchor="middle">📺 NetflixBiblia-2</text></svg>');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: end;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+        }
+        
+        .hero-info h1 { font-size: 48px; margin-bottom: 20px; }
+        .hero-info p { font-size: 18px; max-width: 600px; line-height: 1.4; }
+        
+        .section-title { font-size: 24px; margin-bottom: 20px; font-weight: 600; }
+        .seasons-container { display: flex; flex-direction: column; gap: 30px; }
+        .season { margin-bottom: 40px; }
+        .season-title { font-size: 20px; margin-bottom: 15px; color: #fff; }
+        
+        .episodes-row { 
+            display: flex; 
+            gap: 15px; 
+            overflow-x: auto; 
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #e50914 #333;
+        }
+        .episodes-row::-webkit-scrollbar { height: 8px; }
+        .episodes-row::-webkit-scrollbar-track { background: #333; }
+        .episodes-row::-webkit-scrollbar-thumb { background: #e50914; border-radius: 4px; }
+        
+        .episode-card {
+            min-width: 300px;
+            background: #222;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .episode-card:hover { transform: scale(1.05); }
+        
+        .episode-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+        }
+        .play-button {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+        }
+        
+        .episode-info { padding: 15px; }
+        .episode-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .episode-desc { font-size: 14px; color: #ccc; line-height: 1.4; }
+        
+        @media (max-width: 768px) {
+            .netflix-header { padding: 15px 20px; }
+            .netflix-content { padding: 20px; }
+            .hero-section { height: 300px; padding: 20px; }
+            .hero-info h1 { font-size: 32px; }
+            .episode-card { min-width: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="netflix-header">
+        <div class="netflix-logo">📺 NetflixBiblia-2</div>
+        <div class="user-menu">
+            <span>👤 Usuário</span>
+            <button class="logout-btn" onclick="logout()">Sair</button>
+        </div>
+    </header>
+    
+    <main class="netflix-content">
+        <div class="hero-section">
+            <div class="hero-info">
+                <h1>NetflixBiblia-2</h1>
+                <p>Bem-vindo ao seu Netflix App personalizado! Assista aos episódios organizados por temporadas.</p>
+            </div>
+        </div>
+        
+        <div class="seasons-container">
+            <!-- TEMPORADAS SERÃO GERADAS AQUI -->
+            <div class="season">
+                <h2 class="season-title">🎬 Temporada 1</h2>
+                <div class="episodes-row">
+                    <div class="episode-card" onclick="playEpisode('temp1-ep1')">
+                        <div class="episode-thumbnail">
+                            🎥
+                            <div class="play-button">▶️</div>
+                        </div>
+                        <div class="episode-info">
+                            <div class="episode-title">Episódio 1</div>
+                            <div class="episode-desc">Primeiro episódio da temporada</div>
+                        </div>
+                    </div>
+                    <div class="episode-card" onclick="playEpisode('temp1-ep2')">
+                        <div class="episode-thumbnail">
+                            🎥
+                            <div class="play-button">▶️</div>
+                        </div>
+                        <div class="episode-info">
+                            <div class="episode-title">Episódio 2</div>
+                            <div class="episode-desc">Segundo episódio da temporada</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function playEpisode(episodeId) {
+            alert('🎬 Reproduzindo episódio: ' + episodeId + '\n\n📺 Interface Netflix funcionando!\n\nAgora vamos conectar com os arquivos reais.');
+        }
+        
+        function logout() {
+            localStorage.removeItem('netflixUser');
+            window.location.href = 'index.html';
+        }
+        
+        // Verificar se usuário está logado
+        if (!localStorage.getItem('netflixUser')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
